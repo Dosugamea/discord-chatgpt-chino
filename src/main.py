@@ -12,9 +12,6 @@ from config import (
 )
 from util.validation import (
     clean_text,
-    has_mention,
-    is_from_bot,
-    is_self_message,
     is_valid_text_message,
 )
 from util.voice import play_audio_bytes
@@ -27,49 +24,10 @@ voice_client: discord.VoiceClient | None = None
 bot = commands.Bot(command_prefix="!", intents=intents)
 
 
-@client.event
-async def on_message(message: discord.Message) -> None:
+@bot.command()
+async def chat(ctx: commands.Context) -> None:
     global voice_client
-
-    if is_self_message(message, client.user.id):
-        return
-    if is_from_bot(message):
-        return
-    if has_mention(message):
-        return
-
-    if not is_valid_text_message(message):
-        await message.channel.send(ERROR_LONG_TEXT)
-        return
-
-    text = message.content
-    if text.startswith("!chat"):
-        prompt = " ".join(text.split(" ")[1:])
-        async with message.channel.typing():
-            result_text = get_chatgpt_response(prompt)
-            result_text = clean_text(result_text)
-            await message.channel.send(result_text)
-            if voice_client and voice_client.is_connected():
-                audio_bytes = await get_speaking_wave(VV_SPEAKER_ID, result_text)
-                await play_audio_bytes(voice_client, audio_bytes)
-    elif text.startswith("!join"):
-        if not message.author.voice:
-            await message.channel.send(ERROR_JOIN_VC_FIRST)
-            return
-        channel = message.author.voice.channel
-        voice_client = await channel.connect()
-    elif text.startswith("!leave"):
-        if not voice_client or not voice_client.is_connected():
-            await message.channel.send(ERROR_NOT_IN_VC)
-            return
-        await voice_client.disconnect()
-        voice_client = None
-
-
-@bot.command(name="chat")
-async def cmd_chat(ctx: commands.Context) -> None:
-    global voice_client
-    prompt = ctx.message
+    prompt = ctx.message.content
     if not is_valid_text_message(ctx.message):
         await ctx.send(ERROR_LONG_TEXT)
         return
