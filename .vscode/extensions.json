@@ -1,0 +1,15 @@
+{
+    "recommendations": [
+        "eamodio.gitlens",
+        "gencay.vscode-chatgpt",
+        "streetsidesoftware.code-spell-checker",
+        "exodiusstudios.comment-anchors",
+        "usernamehw.errorlens",
+        "github.copilot",
+        "mhutchie.git-graph",
+        "oderwat.indent-rainbow",
+        "pkief.material-icon-theme",
+        "ms-python.python",
+        "ms-python.vscode-pylance"
+    ]
+}
