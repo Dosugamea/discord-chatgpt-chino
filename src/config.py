@@ -3,9 +3,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-DISCORD_BOT_TOKEN = os.getenv("DISCORD_TOKEN")
+DISCORD_BOT_TOKEN = os.getenv("DISCORD_BOT_TOKEN")
 CHATGPT_API_KEY = os.getenv("CHATGPT_API_KEY")
-CHATGPT_URL = "https://api.openai.com/v1/engines/davinci-codex/completions"
 ERROR_LONG_TEXT = (
     "Sorry, the prompt is too long. Please try again with a shorter prompt."
 )
