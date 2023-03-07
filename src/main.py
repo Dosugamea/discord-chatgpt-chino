@@ -20,9 +20,11 @@ from util.validation import (
 from util.voice import play_audio_bytes
 
 
-client = discord.Client()
+intents = discord.Intents.default()
+intents.message_content = True
+
 voice_client: discord.VoiceClient | None = None
-bot = commands.Bot(command_prefix="!")
+bot = commands.Bot(command_prefix="!", intents=intents)
 
 
 @client.event
@@ -81,7 +83,7 @@ async def cmd_chat(ctx: commands.Context) -> None:
 
 
 @bot.command()
-async def cmd_join(ctx: commands.Context) -> None:
+async def join(ctx: commands.Context) -> None:
     global voice_client
     if not ctx.author.voice:
         await ctx.send(ERROR_JOIN_VC_FIRST)
@@ -90,16 +92,16 @@ async def cmd_join(ctx: commands.Context) -> None:
     voice_client = await channel.connect()
 
 
-@client.command()
-async def cmd_leave(ctx: commands.Context) -> None:
+@bot.command()
+async def leave(ctx: commands.Context) -> None:
     global voice_client
-    if not voice_client or not voice_client.is_connected():
+    if not voice_client or (not voice_client.is_connected()):
         await ctx.send(ERROR_NOT_IN_VC)
         return
     await voice_client.disconnect()
 
 
-@client.event
+@bot.event
 async def on_voice_state_update(
     member: Member, before: VoiceState, after: VoiceState
 ) -> None:
@@ -113,10 +115,10 @@ async def on_voice_state_update(
         voice_client = None
 
 
-@client.event
+@bot.event
 async def on_ready() -> None:
-    print("Logged in as {0.user}".format(client))
+    print("Logged in as {0.user}".format(bot))
 
 
 if __name__ == "__main__":
-    client.run(DISCORD_BOT_TOKEN)
+    bot.run(DISCORD_BOT_TOKEN)
