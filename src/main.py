@@ -44,7 +44,7 @@ async def on_message(message: discord.Message) -> None:
     if text.startswith("!chat"):
         prompt = " ".join(text.split(" ")[1:])
         async with message.channel.typing():
-            result_text = await get_chatgpt_response(prompt)
+            result_text = get_chatgpt_response(prompt)
             result_text = clean_text(result_text)
             await message.channel.send(result_text)
             if voice_client and voice_client.is_connected():
@@ -72,7 +72,7 @@ async def cmd_chat(ctx: commands.Context) -> None:
         await ctx.send(ERROR_LONG_TEXT)
         return
     async with ctx.typing():
-        result_text = await get_chatgpt_response(prompt)
+        result_text = get_chatgpt_response(prompt)
         result_text = clean_text(result_text)
         await ctx.send(result_text)
         if voice_client and voice_client.is_connected():
